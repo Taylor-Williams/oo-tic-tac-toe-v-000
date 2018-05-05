@@ -27,31 +27,31 @@ class TicTacToe
     user_input.to_i - 1
   end
 
-  def move(board, index, token)
-    board[index] = token
+  def move(index, token)
+    @board[index] = token
   end
 
-  def position_taken?(board, index)
-    !(board[index].nil? || board[index] == " ")
+  def position_taken?(index)
+    !(@board[index].nil? || @board[index] == " ")
   end
 
-  def valid_move?(board, index)
-    index.between?(0,8) && !position_taken?(board,index)
+  def valid_move?(index)
+    index.between?(0,8) && !position_taken?(index)
   end
 
-  def turn(board)
+  def turn
     puts "please enter 1-9:"
-    if valid_move?(board, index = input_to_index(gets.strip))
-      move(board, index, current_player(board))
-      display_board(board)
+    if valid_move?(index = input_to_index(gets.strip))
+      move(index, current_player)
+      display_board
     else
-      turn(board)
+      turn
     end
   end
 
-  def turn_count(board)
+  def turn_count
     turns = 0
-    board.each do |token|
+    @board.each do |token|
       if token == "X" || token == "O"
         turns += 1
       end
@@ -59,44 +59,40 @@ class TicTacToe
     turns
   end
 
-  def current_player(board)
-    turn_count(board) % 2 == 0 ? "X" : "O"
+  def current_player
+    turn_count % 2 == 0 ? "X" : "O"
   end
 
-  def won?(board)
+  def won?
     WIN_COMBINATIONS.detect do |combo|
-      board[combo[0]] == board[combo[1]] &&
-      board[combo[1]] == board[combo[2]] &&
-      position_taken?(board, combo[0])
+      @board[combo[0]] == board[combo[1]] &&
+      @board[combo[1]] == board[combo[2]] &&
+      position_taken?(combo[0])
     end
   end
 
-  def full?(board)
-    board.all? {|player| player == "X" || player == "O"}
+  def full?
+    @board.all? {|player| player == "X" || player == "O"}
   end
 
-  def draw?(board)
-    full?(board) && !won?(board)
+  def draw?
+    full? && !won?
   end
 
-  def over?(board)
-    draw?(board) || won?(board)
+  def over?
+    draw? || won?
   end
 
-  def winner(board)
-    if combo = won?(board)
-      board[combo.first]
+  def winner
+    if combo = won?
+      @board[combo.first]
     end
   end
 
   def play
-    play(board)
-  end
-
-  def play(board)
-    until over?(board)
-      turn(board)
+    until over?
+      turn
     end
-    won?(board) ? (puts "Congratulations #{winner(board)}!") : (puts "Cat's Game!")
+    won? ? (puts "Congratulations #{winner(board)}!") : (puts "Cat's Game!")
   end
 end
