@@ -89,6 +89,10 @@ class TicTacToe
     end
   end
 
+  def play
+    play(board)
+  end
+
   def play(board)
     until over?(board)
       turn(board)
